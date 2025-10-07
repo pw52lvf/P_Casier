@@ -9,11 +9,12 @@
 
 import UsersController from '#controllers/users_controller'
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 
 const usersController = new UsersController()
 
-router.on('/').render('pages/login')
-router.on('/signup').render('pages/signup')
-router.on('/home').render('/pages/home')
+router.on('/').render('pages/login').as('login')
+router.on('/home').render('pages/home')
 
-router.post('/login', usersController.login)
+// Auth
+router.post('/login', [UsersController, 'login'])
