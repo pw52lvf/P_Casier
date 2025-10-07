@@ -1,9 +1,10 @@
 import type { HttpContextContract } from '@adonisjs/core/http'
 import User from '#models/user'
+import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
-    
-    public async login({ request, response, session }: HttpContextContract) {
+
+  public async login({ request, response, session, auth }: HttpContextContract) {
     const identifiant = request.input('identifiant')
     const password = request.input('password')
 
@@ -17,15 +18,15 @@ export default class UsersController {
         return response.redirect().back()
       }
 
-      const isValidPassword = await user.verifyPassword(password)
-      
+      const isValidPassword = await hash.verify(user.password, password)
+
       if (!isValidPassword) {
         session.flash('errors.login', 'Identifiants invalides')
         return response.redirect().back()
       }
 
-      session.put('user', user)
-      
+      await auth.use('web').login(user)
+
       return response.redirect('/home')
     } catch (error) {
       console.error('Login error:', error)
