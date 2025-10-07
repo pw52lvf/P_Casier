@@ -12,7 +12,7 @@ import router from '@adonisjs/core/services/router'
 
 const usersController = new UsersController()
 
-router.on('/').render('pages/login')
+router.on('/').render('pages/home')
 router.on('/signup').render('pages/signup')
 router.on('/home').render('/pages/home')
 
